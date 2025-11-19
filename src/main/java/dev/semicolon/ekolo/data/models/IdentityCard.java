@@ -7,35 +7,46 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class Wallet {
+public class IdentityCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false, precision = 19, scale = 2)
-    private BigDecimal balance = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private String firstName;
 
-    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ATMCard> atmCards = new ArrayList<>();
+    @Column(nullable = false)
+    private String lastName;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "identity_card_id", unique = true)
-    private IdentityCard identityCard;
+    @Column(nullable = false)
+    private String middleName;
+
+    @Column(nullable = false)
+    private LocalDate birthDate;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(nullable = false)
+    private LocalDate issueDate;
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToOne(mappedBy = "identityCard")
+    private Wallet wallet;
 }

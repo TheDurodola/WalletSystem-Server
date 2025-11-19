@@ -1,6 +1,6 @@
 package dev.semicolon.ekolo.data.models;
 
-public enum CardType {
+public enum AutomatedTellerMachineCardType {
     DEBIT,
     CREDIT
 }
