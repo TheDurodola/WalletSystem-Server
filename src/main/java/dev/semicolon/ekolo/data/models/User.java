@@ -5,20 +5,32 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
-public class IdentityCard {
+@Getter
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    private String profilePicture;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false, unique = true)
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String firstName;
@@ -30,23 +42,20 @@ public class IdentityCard {
     private String middleName;
 
     @Column(nullable = false)
-    private LocalDate birthDate;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(nullable = false)
-    private LocalDate issueDate;
+    private LocalDate birthDate;
 
     @CreatedDate
-    @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "identityCard")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "wallet_id", referencedColumnName = "id", unique = true)
     private Wallet wallet;
 }
+
